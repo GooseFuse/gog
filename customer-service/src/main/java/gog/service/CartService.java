@@ -37,7 +37,7 @@ public class CartService {
     public Uni<Cart> findByCustomerId(Long customerId) {
         return cartRepository.find("customer_id", customerId).firstResult()
             .onItem().ifNotNull().transform(CartService::mapToDomain)
-            .onItem().ifNull().failWith(() -> new WebApplicationException("Cart not found", 404));
+            .onItem().ifNull().failWith(() -> new WebApplicationException("Cart not found for customer id: "+customerId, 404));
     }
     public void create(Long customerId) {
         CustomerEntity customerEntity = customerRepository.findById(customerId).await().indefinitely();

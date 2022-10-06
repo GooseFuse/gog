@@ -24,7 +24,7 @@ import io.smallrye.mutiny.Uni;
 public class CartResource {
     @Inject
     CartService cartService;
-    
+
     @GET
     public Multi<Cart> findAll() {
         return cartService.findAll();
@@ -38,8 +38,8 @@ public class CartResource {
 
     @GET
     @Path("/customer/{id}")
-    public Uni<Cart> findByCustomerId(@RestPath Long customerId) {
-        return cartService.findByCustomerId(customerId);
+    public Uni<Cart> findByCustomerId(@RestPath Long id) {
+        return cartService.findByCustomerId(id);
     }
 
     @POST
