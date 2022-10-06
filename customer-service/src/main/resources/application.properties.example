@@ -1,0 +1,6 @@
+quarkus.datasource.db-kind=postgresql
+quarkus.datasource.username=postgres_user
+quarkus.datasource.password=postgres_pass
+quarkus.datasource.reactive.url=postgres_url
+
+quarkus.hibernate-orm.database.generation=drop-and-create
