@@ -2,11 +2,13 @@ package gog.service;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-
+import javax.ws.rs.WebApplicationException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import gog.entity.CategoryEntity;
 import gog.entity.GameEntity;
 import gog.model.Game;
+import gog.repository.CategoryRepository;
 import gog.repository.GameRepository;
 import io.quarkus.hibernate.reactive.panache.Panache;
 import io.smallrye.mutiny.Multi;
@@ -18,6 +20,9 @@ public class GameService {
     @Inject
     GameRepository gameRepository;
 
+    @Inject
+    CategoryRepository categoryRepository;
+
     public Multi<Game> findAll() {
         return gameRepository.streamAll()
         .onItem().transform(GameService::mapToDomain);
@@ -26,9 +31,14 @@ public class GameService {
         return gameRepository.findById(id)
         .onItem().transform(GameService::mapToDomain);
     }
-    public Uni<Game> create(Game game) {
-        return Panache.withTransaction(() -> gameRepository.persistAndFlush(mapToEntity(game)))
-        .onItem().transform(GameService::mapToDomain);
+    public boolean create(Game game) {
+        CategoryEntity categoryEntity = categoryRepository.findById(game.getCategory().getId()).await().indefinitely();
+        if(categoryEntity==null) return false;
+        GameEntity entity = mapToEntity(game);
+        entity.setCategory(categoryEntity);
+
+        Panache.withTransaction(() -> gameRepository.persist(entity)).await().indefinitely();
+        return true;
     }
     public Uni<Boolean> delete(Long id) {
         return Panache.withTransaction(() -> gameRepository.deleteById(id));

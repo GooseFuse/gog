@@ -2,7 +2,7 @@ package gog.service;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-
+import javax.ws.rs.WebApplicationException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gog.entity.CategoryEntity;
@@ -24,13 +24,16 @@ public class CategoryService {
     }
     public Uni<Category> findById(Long id) {
         return categoryRepository.findById(id)
-        .onItem().transform(CategoryService::mapToDomain);
+        .onItem().ifNotNull().transform(CategoryService::mapToDomain)
+        .onItem().ifNull().failWith(() -> new WebApplicationException("Category not found", 404));
     }
     public Uni<Category> create(Category category) {
         return Panache.withTransaction(() -> categoryRepository.persistAndFlush(mapToEntity(category)))
         .onItem().transform(CategoryService::mapToDomain);
     }
-
+    public Uni<Boolean> delete(Long id) {
+        return Panache.withTransaction(() -> categoryRepository.deleteById(id));
+    }
     public static CategoryEntity mapToEntity(Category category) {
         return new ObjectMapper().convertValue(category, CategoryEntity.class);
     }

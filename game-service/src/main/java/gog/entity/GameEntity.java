@@ -28,8 +28,7 @@ public class GameEntity {
     private Long id;
 
     @ManyToOne
-    @MapsId
-    private CategoryEntity categories;
+    private CategoryEntity category;
 
     @Enumerated(EnumType.STRING)
     private GameStatus status;

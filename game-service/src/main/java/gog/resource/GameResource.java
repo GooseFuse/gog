@@ -2,10 +2,13 @@ package gog.resource;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.jboss.resteasy.reactive.RestPath;
 
@@ -30,5 +33,19 @@ public class GameResource {
     @Path("/{id}")
     public Uni<Game> findById(@RestPath Long id) {
         return gameService.findById(id);
+    }
+
+    @POST
+    public Response create(Game game) {
+        return gameService.create(game)? Response.status(Response.Status.CREATED).build()
+        : Response.status(Response.Status.NO_CONTENT).build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    public Uni<Response> delete(@RestPath Long id) {
+        return gameService.delete(id)
+        .map(deleted -> deleted ? Response.status(Response.Status.NO_CONTENT).build()
+        : Response.status(Response.Status.NOT_FOUND).build());
     }
 }
