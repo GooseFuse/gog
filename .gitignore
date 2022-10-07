@@ -40,6 +40,5 @@ nb-configuration.xml
 
 # settings
 .postgres
-application.properties
 
 

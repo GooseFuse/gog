@@ -46,6 +46,10 @@
       <artifactId>quarkus-kubernetes</artifactId>
     </dependency>
     <dependency>
+    <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-kubernetes-config</artifactId>
+    </dependency>
+    <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-container-image-jib</artifactId>
     </dependency>
