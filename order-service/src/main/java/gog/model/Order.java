@@ -10,8 +10,9 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class Order {
     private Long id;
+    private Long cartId;
     private String status;
-    private Address shipmentAddress;
+    private Address address;
     private Payment payment;
     private Set<OrderItem> orderItems;
     private BigDecimal totalPrice;

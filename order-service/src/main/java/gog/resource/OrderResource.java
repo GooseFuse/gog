@@ -1,6 +1,7 @@
 package gog.resource;
 
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -21,12 +22,12 @@ import io.smallrye.mutiny.Uni;
 
 @Path("/orders")
 @Produces(MediaType.APPLICATION_JSON)
-Consumes(MediaType.APPLCIATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class OrderResource {
     @Inject
     OrderService orderService;
     @Inject
-    AddressService adddressService;
+    AddressService addressService;
     @Inject
     OrderItemService orderItemService;
     @Inject
@@ -44,7 +45,7 @@ public class OrderResource {
 
     @POST
     public Response create(Order order) {
-        //return orderService.create(order);
+        orderService.create(order);
         return Response.status(Response.Status.CREATED).build();
     }
 
