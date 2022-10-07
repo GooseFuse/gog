@@ -2,6 +2,7 @@ package gog.service;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.ws.rs.WebApplicationException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -22,7 +23,8 @@ public class AddressService {
     }
     public Uni<Address> findById(Long id) {
         return addressRepository.findById(id)
-        .onItem().transform(AddressService::mapToDomain);
+        .onItem().ifNotNull().transform(AddressService::mapToDomain)
+        .onItem().ifNull().failWith(() -> new WebApplicationException("Address not found", 404));
     }
     public Uni<Address> create(Address address) {
         return Panache.withTransaction(() -> addressRepository.persistAndFlush(mapToEntity(address)))

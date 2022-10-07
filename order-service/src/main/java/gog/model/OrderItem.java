@@ -7,6 +7,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class OrderItem {
     private Long id;
-    private Long productId;
+    private Long gameId;
 
 }

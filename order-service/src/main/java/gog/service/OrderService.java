@@ -3,6 +3,7 @@ package gog.service;
 import javax.inject.Inject;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.ws.rs.WebApplicationException;
 
 import gog.entity.OrderEntity;
 import gog.model.Order;
@@ -30,10 +31,11 @@ public class OrderService {
     }
     public Uni<Order> findById(Long id) {
         return orderRepository.findById(id)
-        .onItem().transform(OrderService::mapToDomain);
+        .onItem().ifNotNull().transform(OrderService::mapToDomain)
+        .onItem().ifNull().failWith(() -> new WebApplicationException("Order not found", 404));
     }
     public void create(Order order) {
-        
+
     }
     public Uni<Boolean> delete(Long id) {
         return Panache.withTransaction(() -> orderRepository.deleteById(id));

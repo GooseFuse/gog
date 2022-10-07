@@ -2,6 +2,7 @@ package gog.service;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.ws.rs.WebApplicationException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -23,7 +24,9 @@ public class PaymentService {
     }
 
     public Uni<Payment> findById(long id) {
-        return paymentRepository.findById(id).onItem().transform(PaymentService::mapToDomain);
+        return paymentRepository.findById(id)
+        .onItem().ifNotNull().transform(PaymentService::mapToDomain)
+        .onItem().ifNull().failWith(() -> new WebApplicationException("Payment not found", 404));
     }
     public Uni<Payment> create(Payment payment) {
         return Panache.withTransaction(() -> paymentRepository.persistAndFlush(mapToEntity(payment))

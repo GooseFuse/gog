@@ -1,16 +1,58 @@
 package gog.resource;
 
+import javax.inject.Inject;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.jboss.resteasy.reactive.RestPath;
+
+import gog.model.Order;
+import gog.service.AddressService;
+import gog.service.OrderItemService;
+import gog.service.OrderService;
+import gog.service.PaymentService;
+import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
 
 @Path("/orders")
+@Produces(MediaType.APPLICATION_JSON)
+Consumes(MediaType.APPLCIATION_JSON)
 public class OrderResource {
+    @Inject
+    OrderService orderService;
+    @Inject
+    AddressService adddressService;
+    @Inject
+    OrderItemService orderItemService;
+    @Inject
+    PaymentService paymentService;
 
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String hello() {
-        return "Hello from RESTEasy Reactive";
+    public Multi<Order> findAll() {
+        return orderService.findAll();
+    }
+    @GET
+    @Path("/{id}")
+    public Uni<Order> findById(@RestPath Long id) {
+        return orderService.findById(id);
+    }
+
+    @POST
+    public Response create(Order order) {
+        //return orderService.create(order);
+        return Response.status(Response.Status.CREATED).build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    public Uni<Response> delete(@RestPath Long id) {
+        return orderService.delete(id)
+            .map(deleted -> deleted ? Response.status(Response.Status.NO_CONTENT).build()
+            :Response.status(Response.Status.NOT_FOUND).build());
     }
 }
