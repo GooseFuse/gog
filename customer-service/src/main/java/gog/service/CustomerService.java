@@ -29,7 +29,7 @@ public class CustomerService {
             .onItem().ifNull().failWith(() -> new WebApplicationException("Failed to find customer", 404));
     }
     public Uni<Customer> create(Customer customer) {
-        return Panache.withTransaction(() -> customerRepository.persist(mapToEntity(customer))
+        return Panache.withTransaction(() -> customerRepository.persistAndFlush(mapToEntity(customer))
             .onItem()
             .transform(CustomerService::mapToDomain));
     }
