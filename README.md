@@ -24,8 +24,10 @@ At the moment it's a really basic backend with some tests. You can make new orde
 
 # DB
 run `kubectl apply -f configmap.yaml` in the root of the project to add settings for db (each service uses this data)
-alternatively you can edit /src/main/resources/application.properties in each of the services
-you can use different DB with each service, or a load balancer
+
+Alternatively you can edit /src/main/resources/application.properties in each of the services
+
+You can use different DB with each service, or a load balancer
 # Starting in kubernetes
 run `mvn clean package -Dquarkus.kubernetes.deploy=true` in:
 - /customer-service
@@ -37,3 +39,6 @@ run `mvn quarkus:dev` in:
 - /customer-service
 - /game-service
 - /order-service
+
+# Suggestions
+- hosting on cloud for more flexibility, scalibility, DDoS protection
